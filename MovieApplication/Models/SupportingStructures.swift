@@ -9,6 +9,12 @@
 import Foundation
 import SwiftyJSON
 
+struct MovieTrailer {
+    let id: String
+    let key: String
+    let name: String
+}
+
 class Movie: Decodable {
     let id: Int
     let title: String
@@ -44,4 +50,16 @@ struct Review {
     let id: String
     let author: String
     let content: String
+    
+    init(json: JSON) {
+        self.id = json["id"].stringValue
+        self.author = json["author"].stringValue
+        self.content = json["content"].stringValue
+    }
+    
+    init(id: String, author: String, content: String) {
+        self.id = id
+        self.author = author
+        self.content = content
+    }
 }

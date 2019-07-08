@@ -35,6 +35,9 @@ class MovieReviewsViewController: UIViewController {
         title = "Reviews"
         view.backgroundColor = .white
         
+        viewModel.delegate = self
+        viewModel.makeRequest()
+        
         setupLayout()
     }
     
@@ -52,14 +55,12 @@ extension MovieReviewsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard var cell = reviewsTableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? ReviewTableViewCell else {
+        guard let cell = reviewsTableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? ReviewTableViewCell else {
             return UITableViewCell()
         }
         cell.setData(review: viewModel.getReview(at: indexPath.row))
         return cell
     }
-    
-    
 }
 
 extension MovieReviewsViewController: ReviewListViewModelDelegate {

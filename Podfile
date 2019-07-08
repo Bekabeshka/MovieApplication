@@ -9,4 +9,5 @@ target 'MovieApplication' do
   pod 'SwiftyJSON', '~> 4.0'
   pod 'AlamofireImage', '~> 3.4.0'
   pod 'SnapKit', '~> 4.0.0'
+  pod 'SVProgressHUD'
 end

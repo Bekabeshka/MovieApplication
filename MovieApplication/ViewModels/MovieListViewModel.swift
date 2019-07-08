@@ -26,9 +26,13 @@ class MovieListViewModel {
     }
     
     func makeRequest() {
-        self.movies = NetworkService.requestMovies()
-        DispatchQueue.main.async {
-            self.delegate?.didFetchMovies()
-        }
+        NetworkService.requestMovies(completion: { [weak self] (response) in
+            for item in response["results"] {
+                self?.movies.append(Movie(json: item.1))
+                DispatchQueue.main.async {
+                    self?.delegate?.didFetchMovies()
+                }
+            }
+        })
     }
 }

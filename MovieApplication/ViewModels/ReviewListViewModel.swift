@@ -31,10 +31,13 @@ class ReviewListViewModel {
     }
     
     func makeRequest() {
-        reviews.append(Review(id: "0", author: "asdf", content: "asdf"))
-        reviews = NetworkService.requestReviews()
-        DispatchQueue.main.async {
-            self.delegate?.didFetchReviews()
+        NetworkService.requestReviews(movie: movie) { [weak self] requset in
+            for item in requset["results"] {
+                self?.reviews.append(Review(json: item.1))
+                DispatchQueue.main.async {
+                    self?.delegate?.didFetchReviews()
+                }
+            }
         }
     }
 }

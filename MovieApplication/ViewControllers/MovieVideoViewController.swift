@@ -7,17 +7,16 @@
 //
 
 import UIKit
+import SnapKit
+import SVProgressHUD
 
 class MovieVideoViewController: UIViewController {
-
-    private let movie: Movie
-    let trailerWebView: UIWebView = {
-        let webView = UIWebView()
-        return webView
-    }()
+    
+    private let viewModel: TrailerVideoViewModel
+    lazy var trailerWebView = UIWebView()
 
     init(movie: Movie) {
-        self.movie = movie
+        self.viewModel = TrailerVideoViewModel(movie: movie)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -28,21 +27,46 @@ class MovieVideoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        view.backgroundColor = .white
+        
+        viewModel.delegate = self
+        viewModel.makeRequset()
+        
         setupLayout()
-        let url = URL(string: "https://www.youtube.com/watch?v=q2PJ0kdrYIs")!
-        let request = URLRequest(url: url)
-        trailerWebView.loadRequest(request)
     }
     
     func setupLayout() {
         view.addSubview(trailerWebView)
+        trailerWebView.delegate = self
         trailerWebView.snp.makeConstraints({make in
-            make.centerY.equalToSuperview()
-            make.leading.trailing.equalToSuperview()
-            make.height.equalTo(150)
+            make.top.bottom.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         })
-        
-        
     }
+}
 
+extension MovieVideoViewController: TrailerVideoViewModelDelegate {
+    func didFetchTrailer() {
+        guard let movieTrailer = viewModel.movieTrailers.first else { return }
+        guard let url = URL(string: "https://www.youtube.com/embed/\(movieTrailer.key)") else { return }
+        let request = URLRequest(url: url)
+        trailerWebView.contentMode = .scaleAspectFill
+        trailerWebView.loadRequest(request)
+        
+        SVProgressHUDStyle.light
+        SVProgressHUD.show(withStatus: "Loading")
+    }
+}
+
+extension MovieVideoViewController: UIWebViewDelegate {
+    func webViewDidFinishLoad(_ webView: UIWebView) {
+        if webView.isLoading {
+            return
+        }
+        
+        SVProgressHUD.dismiss()
+    }
+    
+    func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
+        print(error.localizedDescription)
+    }
 }

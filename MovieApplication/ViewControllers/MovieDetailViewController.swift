@@ -30,6 +30,15 @@ class MovieDetailViewController: UIViewController {
         return label
     }()
     
+    let trailerButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("▶︎", for: .normal)
+        button.setTitleColor(UIColor(red: 0, green: 120/155, blue: 39/255, alpha: 1), for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 28)
+        button.addTarget(self, action: #selector(didTapTrailerButton), for: .touchUpInside)
+        return button
+    }()
+    
     lazy var reviewButton: UIButton = {
         let button = UIButton()
         button.setTitle("Show reviews", for: .normal)
@@ -38,8 +47,6 @@ class MovieDetailViewController: UIViewController {
         button.addTarget(self, action: #selector(didTapReviewButton), for: .touchUpInside)
         return button
     }()
-    
-    
     
     let movie: Movie
     
@@ -91,9 +98,17 @@ class MovieDetailViewController: UIViewController {
             make.trailing.equalToSuperview().offset(-16)
         }
         
+        view.addSubview(trailerButton)
+        trailerButton.snp.makeConstraints({ (make) in
+            make.top.equalTo(averageVoteLabel).offset(8)
+            make.leading.equalToSuperview().offset(16)
+            make.trailing.equalToSuperview().offset(-16)
+            make.height.equalTo(60)
+        })
+        
         view.addSubview(reviewButton)
         reviewButton.snp.makeConstraints { (make) in
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             make.leading.equalToSuperview().offset(16)
             make.trailing.equalToSuperview().offset(-16)
             make.height.equalTo(60)
@@ -103,6 +118,11 @@ class MovieDetailViewController: UIViewController {
     @IBAction func didTapReviewButton() {
         let movieReviewsViewController = MovieReviewsViewController(movie: movie)
         navigationController?.pushViewController(movieReviewsViewController, animated: true)
+    }
+    
+    @objc func didTapTrailerButton() {
+        let movieVideoViewController = MovieVideoViewController(movie: movie)
+        navigationController?.pushViewController(movieVideoViewController, animated: true)
     }
     
 }

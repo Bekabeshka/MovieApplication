@@ -35,9 +35,10 @@ class ViewController: UIViewController {
         title = "Popular movies"
         view.backgroundColor = .white
         
-        setupLayout()
-        
+        viewModel.delegate = self
         viewModel.makeRequest()
+        
+        setupLayout()
     }
     
     func setupLayout() {
@@ -52,19 +53,17 @@ class ViewController: UIViewController {
 
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return viewModel.getNumberOfMovies()
-        return 3
+        return viewModel.getNumberOfMovies()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? MovieCollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.backgroundColor = .red
-//        guard let imageUrl = URL(string: viewModel.getMovie(at: indexPath.row).posterFullPath) else {
-//            return cell
-//        }
-//        cell.setImage(from: imageUrl)
+        guard let imageUrl = URL(string: viewModel.getMovie(at: indexPath.row).posterFullPath) else {
+            return cell
+        }
+        cell.setImage(from: imageUrl)
         return cell
     }
     
@@ -73,7 +72,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let movieDetailViewController = MovieDetailViewController(movie: Movie(id: 0, title: "0", posterPath: "0", overview: "0", voteAverage: 1, releaseDate: "0"))
+        let movieDetailViewController = MovieDetailViewController(movie: viewModel.getMovie(at: indexPath.row))
         navigationController?.pushViewController(movieDetailViewController, animated: true)
     }
 }

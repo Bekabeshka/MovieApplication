@@ -52,7 +52,6 @@ class MovieDetailViewController: UIViewController {
     
     init(movie: Movie) {
         self.movie = movie
-        //MARK: why?
         super.init(nibName: nil, bundle: nil)
     }
     

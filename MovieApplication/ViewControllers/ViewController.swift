@@ -57,6 +57,10 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if viewModel.isReadyForNewRequest(indexPathRow: indexPath.row) {
+            viewModel.makeRequest()
+        }
+        
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? MovieCollectionViewCell else {
             return UICollectionViewCell()
         }

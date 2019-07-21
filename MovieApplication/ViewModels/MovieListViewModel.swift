@@ -13,6 +13,8 @@ protocol MovieListViewModelDelegate: class {
 }
 
 class MovieListViewModel {
+    private var page = 1
+    private var previousRequest = 0
     private var movies: [Movie] = []
     
     weak var delegate: MovieListViewModelDelegate?
@@ -25,14 +27,23 @@ class MovieListViewModel {
         return movies[index]
     }
     
+    func isReadyForNewRequest(indexPathRow: Int) -> Bool {
+        if indexPathRow - 15 > previousRequest {
+            previousRequest += 20
+            return true
+        }
+        return false
+    }
+    
     func makeRequest() {
-        NetworkService.requestMovies(completion: { [weak self] (response) in
+        NetworkService.requestMovies(page: self.page, completion: { [weak self] (response) in
             for item in response["results"] {
                 self?.movies.append(Movie(json: item.1))
                 DispatchQueue.main.async {
                     self?.delegate?.didFetchMovies()
                 }
             }
+            self?.page += 1
         })
     }
 }

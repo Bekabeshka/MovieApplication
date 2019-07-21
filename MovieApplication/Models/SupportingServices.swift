@@ -11,9 +11,9 @@ import Alamofire
 import SwiftyJSON
 
 struct NetworkService {
-    static func requestMovies(completion: @escaping (JSON) -> ()) {
+    static func requestMovies(page: Int, completion: @escaping (JSON) -> ()) {
         
-        let urlString = "https://api.themoviedb.org/3/movie/popular?api_key=7b3633c685b1681577e67baa99cce643&language=en-US"
+        let urlString = "https://api.themoviedb.org/3/movie/popular?api_key=7b3633c685b1681577e67baa99cce643&language=en-US&page=\(page)"
         guard let url = URL(string: urlString) else {
             return
         }

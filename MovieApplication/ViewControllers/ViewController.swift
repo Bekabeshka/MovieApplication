@@ -30,6 +30,7 @@ class ViewController: UIViewController {
     }()
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         title = "Popular movies"
@@ -64,10 +65,12 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? MovieCollectionViewCell else {
             return UICollectionViewCell()
         }
-        guard let imageUrl = URL(string: viewModel.getMovie(at: indexPath.row).posterFullPath) else {
+        
+        let movie = viewModel.getMovie(at: indexPath.row)
+        guard let imageUrl = URL(string: movie.posterFullPath) else {
             return cell
         }
-        cell.setImage(from: imageUrl)
+        cell.setImage(from: imageUrl, andKey: NSString(string: movie.title))
         return cell
     }
     

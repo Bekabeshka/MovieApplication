@@ -20,18 +20,12 @@ class MovieCollectionViewCell: UICollectionViewCell {
         })
     }
     
-    func setImage(from url: URL, andKey key: NSString) {
+    func setImage(url: URL, key: NSString) {
+        imageView.image = nil
         if let image = Cache.imageCache.object(forKey: key) {
             imageView.image = image
         } else {
-            if let data = try? Data(contentsOf: url) {
-                if let image = UIImage(data: data) {
-                    Cache.imageCache.setObject(image, forKey: key)
-                    DispatchQueue.main.async {
-                        self.imageView.image = image
-                    }
-                }
-            }
+            imageView.af_setImage(withURL: url)
         }
     }
     
